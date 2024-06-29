@@ -28,13 +28,14 @@ export class GameService {
   addPlayer(name: String) {
     if (this.#players.length !== 2) {
       const playerId = this.#players.length;
+      const playerSymbol = this.#symbols[playerId];
       const newPlayer: PlayerService = new PlayerService(
         name,
         playerId,
-        this.#symbols[playerId],
+        playerSymbol,
       );
       this.#players.push(newPlayer);
-      return { id: playerId };
+      return { id: playerId, symbol: playerSymbol };
     }
   }
 
@@ -46,5 +47,14 @@ export class GameService {
       this.#board[playerMove.move] || this.#symbols[playerMove.id];
     this.#players = this.#players.reverse();
     // }
+  }
+
+  otherPlayerDetails(id: number) {
+    const otherPlayer: PlayerService = this.#players.filter(
+      (player) => player.id !== id,
+    )[0];
+    return otherPlayer
+      ? { name: otherPlayer.name, symbol: otherPlayer.symbol }
+      : {};
   }
 }
