@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Query,
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { GameStateDto, GameStateReqDto } from './dto/game-state.dto';

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GameStateDto } from './dto/game-state.dto';
 import { PlayerService } from 'src/player/player.service';
 import { PlayerMoveDto } from './dto/play-move.dto';
+import { LobbyIsFullException } from './exceptions/LobbyIsFullException';
 
 @Injectable()
 export class GameService {
@@ -26,17 +27,20 @@ export class GameService {
   }
 
   addPlayer(name: String) {
-    if (this.#players.length !== 2) {
-      const playerId = this.#players.length;
-      const playerSymbol = this.#symbols[playerId];
-      const newPlayer: PlayerService = new PlayerService(
-        name,
-        playerId,
-        playerSymbol,
-      );
-      this.#players.push(newPlayer);
-      return { id: playerId, symbol: playerSymbol };
+    if (this.#players.length === 2) {
+      throw new LobbyIsFullException();
     }
+
+    const playerId = this.#players.length;
+    const playerSymbol = this.#symbols[playerId];
+    const newPlayer: PlayerService = new PlayerService(
+      name,
+      playerId,
+      playerSymbol,
+    );
+    this.#players.push(newPlayer);
+    
+    return { id: playerId, symbol: playerSymbol };
   }
 
   playMove(playerMove: PlayerMoveDto) {
